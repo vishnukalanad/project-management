@@ -1,16 +1,25 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import Sidebar from "./components/sidebar.jsx";
 import NewProject from "./components/NewProject.jsx";
 import NoProjectSelected from "./components/NoProjectSelected.jsx";
+import SelectedProject from "./components/SelectedProject.jsx";
 
 function App() {
     const [projectState, setProjectState] = useState({
         selectedProject: undefined,
         projects: []
     })
+
+    function handleSelectProject(projectId) {
+        setProjectState(prevState =>{
+            return {
+                ...prevState,
+                selectedProject: projectId,
+                showNewProject: true
+            }
+        })
+    }
 
     function handleNewProject() {
         setProjectState(prevState =>{
@@ -21,10 +30,13 @@ function App() {
             }
         })
     }
-    let content = null;
+
+    const selectedProject = projectState.projects.find(project => project.id === projectState.selectedProject);
+
+    let content = <SelectedProject project={selectedProject} />;
 
     if(projectState.selectedProject === null) {
-        content = <NewProject onAddProject={handleAddProject} />
+        content = <NewProject onAddProject={handleAddProject} onCancel={handleCancel} />
     } else if(projectState.selectedProject === undefined) {
         content = <NoProjectSelected onStartAddProject={handleNewProject} />
     }
@@ -39,9 +51,20 @@ function App() {
         })
     }
 
+    function handleCancel() {
+        setProjectState((prevState) => {
+            return (
+                {
+                    ...prevState,
+                    selectedProject: undefined,
+                }
+            );
+        })
+    }
+
   return (
     <div className="h-screen flex gap-8 bg-stone-50">
-      <Sidebar onStartAddProject={handleNewProject} projects={projectState.projects} />
+      <Sidebar onStartAddProject={handleNewProject} projects={projectState.projects} onSelectProject={handleSelectProject} />
         {content}
     </div>
   )
