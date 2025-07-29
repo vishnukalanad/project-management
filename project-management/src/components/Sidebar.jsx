@@ -8,10 +8,12 @@ export default function Sidebar({onStartAddProject, projects, onSelectProject, s
         </div>
         <ul className="mt-8">
             {projects.map((project) => {
-                let style = "w-full text-left text-stone-100 rounded-md bg-stone-900 py-2 px-2 mt-2 cursor-pointer hover:bg-stone-800"
+                let style = "w-full text-left text-stone-100 rounded-md py-2 px-2 mt-2 cursor-pointer hover:bg-stone-800"
 
                 if (project.id === selectedProjectId) {
                    style +=" bg-stone-800"
+                } else {
+                    style += "bg-stone-900"
                 }
                 return(<li key={project.id}>
                     <button onClick={() => onSelectProject(project.id)} className={style}>{project.title}</button>
